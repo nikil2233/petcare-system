@@ -11,6 +11,7 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/profile', require('./routes/profile'));
 app.use('/api/pets', require('./routes/pets'));
+app.use('/api/clients', require('./routes/clients'));
 
 // Health check: is the server up, and can it reach the database?
 app.get('/health', async (req, res) => {
