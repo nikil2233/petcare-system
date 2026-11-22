@@ -12,6 +12,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/profile', require('./routes/profile'));
 app.use('/api/pets', require('./routes/pets'));
 app.use('/api/clients', require('./routes/clients'));
+app.use('/api/emergency', require('./routes/emergency'));
 
 // Health check: is the server up, and can it reach the database?
 app.get('/health', async (req, res) => {
