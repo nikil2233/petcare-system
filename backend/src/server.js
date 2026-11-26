@@ -10,6 +10,13 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+// Express 5 leaves req.body undefined when no JSON body is sent.
+// An empty object lets the routes reply 400 ("... is required") instead of crashing with 500.
+app.use((req, res, next) => {
+  req.body ??= {};
+  next();
+});
+
 // Before any emergency request is handled, close the ones nobody answered in time.
 app.use(['/api/emergency', '/api/vet/emergencies'], async (req, res, next) => {
   try {

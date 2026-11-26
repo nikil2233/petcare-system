@@ -1,5 +1,6 @@
 -- DEVELOPMENT ONLY. Never run this in production.
--- Run after 001_init.sql on an EMPTY database.
+-- Run after migrations 001-004 on an EMPTY database
+-- (the vets below use accepts_emergencies and emergency_phone, which come from 003).
 --
 -- password_hash values are placeholders. Create real accounts through the API (bcrypt),
 -- and create the first admin with a script, never through public signup.
@@ -12,17 +13,21 @@ INSERT INTO users (name, email, password_hash, role, phone, email_verified_at) V
   ('Paws Pet Foods',  'seller@example.com',       'placeholder-hash', 'seller',  '0779998888', NOW()),  -- 5
   ('Site Admin',      'admin@example.com',        'placeholder-hash', 'admin',   NULL,         NOW()),  -- 6
   ('Nimali (Clinic)', 'clinicstaff@example.com',  'placeholder-hash', 'staff',   '0112000011', NOW()),  -- 7
-  ('Kamal (Shelter)', 'shelterstaff@example.com', 'placeholder-hash', 'staff',   '0777654322', NOW());  -- 8
+  ('Kamal (Shelter)', 'shelterstaff@example.com', 'placeholder-hash', 'staff',   '0777654322', NOW()),  -- 8
+  ('Dr. Fernando',    'vet3@example.com',         'placeholder-hash', 'vet',     '0912000004', NOW());  -- 9
 
 INSERT INTO pets (owner_id, name, species, breed, age, medical_notes) VALUES
   (1, 'Bruno', 'Dog', 'Labrador', 3, 'Vaccinated, no allergies'),   -- 1
   (1, 'Mimi',  'Cat', 'Persian',  2, 'Needs special food');         -- 2
 
 -- Vet 1 is approved. Vet 2 is still pending, so use it to test the admin approval queue.
+-- Vets 1 and 3 take emergencies, so /api/emergency/nearest has two clinics to sort by distance.
 INSERT INTO vets (user_id, clinic_name, address, lat, lng, phone, opening_hours,
-                  appointment_minutes, approval_status, reviewed_by, reviewed_at) VALUES
-  (2, 'City Pet Clinic',   '12 Main Street, Colombo 03', 6.9271, 79.8612, '0112000001', 'Mon-Sat 8am-6pm', 30, 'approved', 6, NOW()),
-  (3, 'Green Valley Vets', '45 Lake Road, Kandy',        7.2906, 80.6337, '0812000002', 'Mon-Fri 9am-5pm', 30, 'pending',  NULL, NULL);
+                  appointment_minutes, approval_status, reviewed_by, reviewed_at,
+                  accepts_emergencies, emergency_phone) VALUES
+  (2, 'City Pet Clinic',   '12 Main Street, Colombo 03', 6.9271, 79.8612, '0112000001', 'Mon-Sat 8am-6pm', 30, 'approved', 6,    NOW(), TRUE,  '0112000001'),  -- 1
+  (3, 'Green Valley Vets', '45 Lake Road, Kandy',        7.2906, 80.6337, '0812000002', 'Mon-Fri 9am-5pm', 30, 'pending',  NULL, NULL,  FALSE, NULL),          -- 2
+  (9, 'PetCare 24/7',      '3 Beach Road, Galle',        6.0535, 80.2210, '0912000004', 'Open 24 hours',   30, 'approved', 6,    NOW(), TRUE,  '0912000004'); -- 3
 
 INSERT INTO shelters (user_id, name, address, lat, lng, phone, capacity, price_per_day,
                       approval_status, reviewed_by, reviewed_at) VALUES
