@@ -34,6 +34,7 @@ app.use('/api/clients', require('./routes/clients'));
 app.use('/api/emergency', require('./routes/emergency'));
 app.use('/api/emergency/requests', require('./routes/ownerEmergencies'));
 app.use('/api/vet/emergencies', require('./routes/vetEmergencies'));
+app.use('/api/notifications', require('./routes/notifications'));
 
 // Health check: is the server up, and can it reach the database?
 app.get('/health', async (req, res) => {
